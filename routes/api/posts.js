@@ -73,4 +73,22 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
+//@route DELETE api/posts/:id
+//@desc DELETE post by id
+//@access private
+router.delete('/:id', auth, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+
+    if (post.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'User not authorized.' });
+    }
+    await post.remove();
+    res.json({ msg: 'Post removed' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;
