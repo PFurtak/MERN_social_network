@@ -6,7 +6,7 @@ const Post = require('../../models/Post');
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
 
-//@route GET api/posts
+//@route POST api/posts
 //@desc Create Post
 //@access private
 router.post(
@@ -37,5 +37,19 @@ router.post(
     }
   }
 );
+
+//@route GET api/posts
+//@desc GET all Posts
+//@access private
+
+router.get('/', auth, async (req, res) => {
+  try {
+    const posts = await Post.find().sort({ date: -1 });
+    res.json(posts);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 module.exports = router;
